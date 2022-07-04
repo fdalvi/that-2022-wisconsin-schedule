@@ -104,7 +104,8 @@ def main():
 			"start_time": start_time.timestamp(),
 			"end_time": end_time.timestamp(),
 			"location": location,
-			"description": description
+			"description": description,
+			"link": f'https://that.us/{activity}'
 		}
 		all_activities.append(activity_obj)
 		print(activity_obj["title"])
