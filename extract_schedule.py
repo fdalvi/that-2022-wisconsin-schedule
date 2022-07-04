@@ -15,7 +15,7 @@ def get_activities(schedule_url = 'https://that.us/events/wi/2022/schedule/'):
 		link_url = link.get('href')
 		if link_url is None:
 			continue
-		match = re.search('/activities/([^/]+)/', link_url)
+		match = re.search('/activities/([^/]+)/?', link_url)
 		if match and match.group(1) != "create":
 			activity_set.add(link_url.strip())
 	return activity_set
@@ -53,7 +53,7 @@ def main():
 
 	all_activities = []
 	for activity in activity_set:
-		activity_id = re.search('/activities/([^/]+)/', activity).group(1)
+		activity_id = re.search('/activities/([^/]+)/?', activity).group(1)
 		html_text = None
 		if cache:
 			if os.path.exists(f".cache/{activity_id}"):
