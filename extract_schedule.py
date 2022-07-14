@@ -8,7 +8,7 @@ from pathlib import Path
 
 from argparse import ArgumentParser
 from bs4 import BeautifulSoup
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 def get_activities(schedule_url = 'https://that.us/events/wi/2022/schedule/'):
 	html_text = requests.get(schedule_url).text
@@ -93,10 +93,17 @@ def main():
 			import sys
 			sys.exit(1)
 
-		# Wednesday, July 27, 2022 - 7:30 PM UTC
-		start_time = datetime.strptime(date[:-5], '%A, %B %d, %Y - %I:%M %p %Z')
-		assert "hour" in duration_2, f"{activity_id}: {duration} {duration_2}"
-		end_time = start_time + timedelta(hours=float(duration))
+		# Sample: Wednesday, July 27, 2022 - 7:30 PM UTC
+		try:
+			start_time = datetime.strptime(date[:-5], '%A, %B %d, %Y - %I:%M %p %Z')
+			start_time = start_time.replace(tzinfo=timezone(timedelta(0)))
+			assert "hour" in duration_2, f"{activity_id}: {duration} {duration_2}"
+			end_time = start_time + timedelta(hours=float(duration))
+			end_time = end_time.replace(tzinfo=timezone(timedelta(0)))
+		except ValueError:
+			print("Skipping because of bad date:")
+			print(date)
+			continue
 
 		description_element = date_element.next_sibling.next_sibling.next_sibling.next_sibling
 		description = description_element.get_text()

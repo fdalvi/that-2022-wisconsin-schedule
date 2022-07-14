@@ -278,8 +278,12 @@
 		}
 
 		for (var activityIdx in schedule) {
-			let start_time = new Date(schedule[activityIdx].start_time * 1000 + 3 * 60 * 60 * 1000).toLocaleString('en-US', { timeZone: 'America/Chicago' });
-			let end_time = new Date(schedule[activityIdx].end_time * 1000 + 3 * 60 * 60 * 1000).toLocaleString('en-US', { timeZone: 'America/Chicago' });
+			let start_time = new Date(0);
+			start_time.setUTCSeconds(schedule[activityIdx].start_time);
+			start_time = start_time.toLocaleString('en-US', { timeZone: 'America/Chicago' });
+			let end_time = new Date(0);
+			end_time.setUTCSeconds(schedule[activityIdx].end_time);
+			end_time = end_time.toLocaleString('en-US', { timeZone: 'America/Chicago' });
 			let day = start_time.split("/")[1];
 
 			console.log(schedule[activityIdx].title)
