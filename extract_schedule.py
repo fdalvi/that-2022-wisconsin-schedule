@@ -2,6 +2,9 @@ import json
 import re
 import requests
 import os
+import time
+
+from pathlib import Path
 
 from argparse import ArgumentParser
 from bs4 import BeautifulSoup
@@ -22,31 +25,29 @@ def get_activities(schedule_url = 'https://that.us/events/wi/2022/schedule/'):
 
 def main():
 	parser = ArgumentParser()
-	parser.add_argument("--no-cache", action="store_true")
-	parser.add_argument("--check-new", action="store_true")
+	parser.add_argument("--cache-path", default=".cache", type=Path)
 	args = parser.parse_args()
 
-	cache = not args.no_cache
+	cache_valid = os.path.exists(args.cache_path / "activity_list.txt")
 
-	if cache:
-		os.makedirs(".cache", exist_ok=True)
+	if not cache_valid:
+		os.makedirs(args.cache_path, exist_ok=True)
 
 	activity_set = set()
-	if cache:
-		if os.path.exists(".cache/activity_list.txt"):
-			with open(".cache/activity_list.txt", "r") as fp:
-				for activity in fp:
-					activity_set.add(activity.strip())
+	if cache_valid:
+		with open(args.cache_path / "activity_list.txt", "r") as fp:
+			for activity in fp:
+				activity_set.add(activity.strip())
 	
-	if args.check_new:
-		latest_activities_set = get_activities()
-		print(latest_activities_set - activity_set)
-		return
+	latest_activities_set = get_activities()
+	new_activities_set = latest_activities_set - activity_set
+	
+	if len(new_activities_set) > 0:
+		print("New activities found, updating cache...")
 
-	if len(activity_set) == 0:
-		activity_set = get_activities()
+		activity_set = latest_activities_set
+		cache_valid = False
 
-	if cache:
 		with open(".cache/activity_list.txt", "w") as fp:
 			for activity in activity_set:
 				fp.write(f"{activity}\n")
@@ -55,8 +56,7 @@ def main():
 	for activity in activity_set:
 		activity_id = re.search('/activities/([^/]+)/?', activity).group(1)
 		html_text = None
-		if cache:
-			if os.path.exists(f".cache/{activity_id}"):
+		if cache_valid and os.path.exists(f".cache/{activity_id}"):
 				with open(f".cache/{activity_id}") as fp:
 					html_text = fp.read()
 
@@ -65,9 +65,10 @@ def main():
 			print(f"Fetching {activity_url}")
 			html_text = requests.get(activity_url).text
 
-		if cache:
+		if not cache_valid:
 			with open(f".cache/{activity_id}", "w") as fp:
 				fp.write(html_text)
+
 		soup = BeautifulSoup(html_text, 'html.parser')
 
 		title_element = soup.find("h2", class_="text-2xl")
@@ -114,6 +115,22 @@ def main():
 
 	with open(f"schedule.json", "w") as fp:
 			json.dump(all_activities, fp)
+
+	# Get last updated date
+	last_updated = time.strftime("%a, %d %b %Y %H:%M:%S %Z", 
+		time.gmtime(os.path.getmtime(args.cache_path / "activity_list.txt"))
+	)
+
+	# Write html
+	with open("template.html") as fp:
+		html_template = fp.read()
+
+	html_template = html_template.replace("<<<<SCHEDULE>>>>", json.dumps(all_activities))
+	html_template = html_template.replace("<<<<LASTUPDATED>>>>", last_updated)
+	with open("index.html", "w") as fp:
+		fp.write(html_template)
+
+
 
 
 if __name__ == '__main__':

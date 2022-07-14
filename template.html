@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>That 2022 Conference Schedule</title>
+
+	<link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre.min.css">
+	<link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre-exp.min.css">
+	<link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre-icons.min.css">
+
+	<style type="text/css">
+		html { scroll-behavior: smooth; } 
+
+		body {
+			width: 100%;
+			height: 100%;
+
+			font-family: sans-serif;
+			background-color: #fcfcfc;
+		}
+
+		#header {
+			padding: 10px;
+			display: flex;
+			flex-direction: column;
+
+			align-items: center;
+
+			background-color: #f1f1f1;
+		}
+
+		#content {
+			margin: 20px;
+		}
+
+
+		.quarter {
+			border-top: 1px dashed black;
+			width: 100%;
+			height: 15px;
+			z-index: 0;
+		}
+
+		.first-quarter {
+			border-top: 1px solid black;
+		}
+
+		.event {
+			height: 100%;
+			/*background-color: grey;*/
+			display: flex;
+			flex-direction: column;
+			z-index: 1;
+			padding-right: 2px;
+
+			cursor: pointer;
+		}
+
+		.timeline {
+			position: absolute;
+			width: 100%;
+			z-index: 0;
+		}
+		.events {
+			margin-left: 50px;
+
+			display: flex;
+			flex-direction: row;
+
+			overflow-x: scroll;
+
+			height: calc(16px * 4 * 17);
+		}
+
+		.top-spacer {
+			width: 200px;
+		}
+
+		.event-spacer {
+			width: 200px;
+			border-radius: 5px;
+			background-color: #bbdaff;
+
+			transition: width 0.3s;
+
+			text-overflow: ellipsis;
+			overflow:hidden;
+			white-space:nowrap;
+		}
+
+		.event-spacer > * {
+			margin: 0px;
+			padding: 4px;
+		}
+
+		.event-spacer:hover {
+			background-color: #bbdaf0;
+			width: 500px;
+			overflow: visible;
+			white-space: unset;
+		}
+
+		.bottom-spacer {
+			width: 200px;
+		}
+
+		.event-title {
+			font-weight: bold;
+		}
+	</style>
+</head>
+<body>
+	<div id="header">
+		<h1> THAT Wisconsin 2022 <small class="label">Unofficial Schedule</small></h1>
+		<p>A calendar view of <a href="https://that.us/events/wi/2022/schedule/">THAT Wisconsin 2022 sessions</a>. Last Updated <kbd><<<<LASTUPDATED>>>></kbd>.</p>
+
+		<em> All times are local to the conference venue. Scroll sideways within each day to see all sessions from that particular day. Click on any session to go to it's official page with all the details! </em>
+
+		<br/>
+		Jump to: 
+		<div class="btn-group btn-group-block">
+			<a class="btn" href="#day-24">24th July</a>
+			<a class="btn" href="#day-25">25th July</a>
+			<a class="btn" href="#day-26">26th July</a>
+			<a class="btn" href="#day-27">27th July</a>
+			<a class="btn" href="#day-28">28th July</a>
+		</div> 
+	</div>
+	<div id="content">
+		<div id="template" style="display: none;">
+			<!-- 6 AM -->
+			<div class="first-quarter quarter"> <span>6 AM</span></div>
+			<div class="quarter"> </div>
+			<div class="quarter"> </div>
+			<div class="quarter"> </div>
+			<!-- 7 AM -->
+			<div class="first-quarter quarter"> <span>7 AM</span></div>
+			<div class="quarter"> </div>
+			<div class="quarter"> </div>
+			<div class="quarter"> </div>
+			<!-- 8 AM -->
+			<div class="first-quarter quarter"> <span>8 AM</span></div>
+			<div class="quarter"> </div>
+			<div class="quarter"> </div>
+			<div class="quarter"> </div>
+			<!-- 9 AM -->
+			<div class="first-quarter quarter"> <span>9 AM</span></div>
+			<div class="quarter"> </div>
+			<div class="quarter"> </div>
+			<div class="quarter"> </div>
+			<!-- 10 AM -->
+			<div class="first-quarter quarter"> <span>10 AM</span></div>
+			<div class="quarter"> </div>
+			<div class="quarter"> </div>
+			<div class="quarter"> </div>
+			<!-- 11 AM -->
+			<div class="first-quarter quarter"> <span>11 AM</span></div>
+			<div class="quarter"> </div>
+			<div class="quarter"> </div>
+			<div class="quarter"> </div>
+			<!-- 12 PM -->
+			<div class="first-quarter quarter"> <span>12 PM</span></div>
+			<div class="quarter"> </div>
+			<div class="quarter"> </div>
+			<div class="quarter"> </div>
+			<!-- 1 PM -->
+			<div class="first-quarter quarter"> <span>1 PM</span></div>
+			<div class="quarter"> </div>
+			<div class="quarter"> </div>
+			<div class="quarter"> </div>
+			<!-- 2 PM -->
+			<div class="first-quarter quarter"> <span>2 PM</span></div>
+			<div class="quarter"> </div>
+			<div class="quarter"> </div>
+			<div class="quarter"> </div>
+			<!-- 3 PM -->
+			<div class="first-quarter quarter"> <span>3 PM</span></div>
+			<div class="quarter"> </div>
+			<div class="quarter"> </div>
+			<div class="quarter"> </div>
+			<!-- 4 PM -->
+			<div class="first-quarter quarter"> <span>4 PM</span></div>
+			<div class="quarter"> </div>
+			<div class="quarter"> </div>
+			<div class="quarter"> </div>
+			<!-- 5 PM -->
+			<div class="first-quarter quarter"> <span>5 PM</span></div>
+			<div class="quarter"> </div>
+			<div class="quarter"> </div>
+			<div class="quarter"> </div>
+			<!-- 6 PM -->
+			<div class="first-quarter quarter"> <span>6 PM</span></div>
+			<div class="quarter"> </div>
+			<div class="quarter"> </div>
+			<div class="quarter"> </div>
+			<!-- 7 PM -->
+			<div class="first-quarter quarter"> <span>7 PM</span></div>
+			<div class="quarter"> </div>
+			<div class="quarter"> </div>
+			<div class="quarter"> </div>
+			<!-- 8 PM -->
+			<div class="first-quarter quarter"> <span>8 PM</span></div>
+			<div class="quarter"> </div>
+			<div class="quarter"> </div>
+			<div class="quarter"> </div>
+			<!-- 9 PM -->
+			<div class="first-quarter quarter"> <span>9 PM</span></div>
+			<div class="quarter"> </div>
+			<div class="quarter"> </div>
+			<div class="quarter"> </div>
+			<!-- 9 PM -->
+			<div class="first-quarter quarter"> <span>10 PM</span></div>
+			<div class="quarter"> </div>
+			<div class="quarter"> </div>
+			<div class="quarter"> </div>
+		</div>
+		<div id="day-24" style="position: relative;">
+			<h1> Sunday, 24th July </h1>
+			<div class="timeline"></div>
+			<div class="events"></div>
+		</div>
+		<div id="day-25" style="position: relative;">
+			<h1> Monday, 25th July </h1>
+			<div class="timeline"></div>
+			<div class="events"></div>
+		</div>
+		<div id="day-26" style="position: relative;">
+			<h1> Tuesday, 26th July </h1>
+			<div class="timeline"></div>
+			<div class="events"></div>
+		</div>
+		<div id="day-27" style="position: relative;">
+			<h1> Wednesday, 27th July </h1>
+			<div class="timeline"></div>
+			<div class="events"></div>
+		</div>
+		<div id="day-28" style="position: relative;">
+			<h1> Thursday, 28th July </h1>
+			<div class="timeline"></div>
+			<div class="events"></div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		let schedule = <<<<SCHEDULE>>>>;
+
+		schedule.sort(function (event1, event2) {
+			if (event1.start_time > event2.start_time) return 1;
+			if (event1.start_time < event2.start_time) return -1;
+
+			return (event2.end_time - event2.start_time) - (event1.end_time - event1.start_time);
+		});
+
+		function timeToBlocks(time_str) {
+			let time_els =  time_str.split(",")[1].trim().split(" ");
+			let hour = 0;
+			if (time_els[1].trim() == "PM")
+				hour = 12;
+			time_els = time_els[0].split(":")
+			let event_hour = parseInt(time_els[0]);
+			if (event_hour == 12) {
+				event_hour = 0;
+			}
+			let blocks = (hour + event_hour - 6) * 4 + (parseInt(time_els[1])/15);
+
+			return blocks;
+		}
+
+		function unicodeToChar(text) {
+			return text.replace(/\\u[\dA-F]{4}/gi, 
+				function (match) {
+					return String.fromCharCode(parseInt(match.replace(/\\u/g, ''), 16));
+				});
+		}
+
+		for (var day=24; day <= 28; day++) {
+			document.querySelector("#day-" + day + " > .timeline").innerHTML += document.getElementById("template").innerHTML;
+		}
+
+		for (var activityIdx in schedule) {
+			let start_time = new Date(schedule[activityIdx].start_time * 1000 + 3 * 60 * 60 * 1000).toLocaleString('en-US', { timeZone: 'America/Chicago' });
+			let end_time = new Date(schedule[activityIdx].end_time * 1000 + 3 * 60 * 60 * 1000).toLocaleString('en-US', { timeZone: 'America/Chicago' });
+			let day = start_time.split("/")[1];
+
+			console.log(schedule[activityIdx].title)
+			console.log(start_time)
+			console.log(end_time)
+
+
+			let top_blocks = timeToBlocks(start_time);
+			let event_blocks = timeToBlocks(end_time) - top_blocks;
+			let bottom_blocks = timeToBlocks("7/26/2022, 11:00:00 PM") - timeToBlocks(end_time);
+
+			console.log("asdfadsfasdfas " + timeToBlocks("7/26/2022, 11:00:00 PM"))
+			console.log(top_blocks)
+			console.log(event_blocks)
+			console.log(bottom_blocks)
+
+			let total_blocks = top_blocks + event_blocks + bottom_blocks;
+
+			top_blocks = top_blocks  / total_blocks * document.getElementsByClassName("timeline")[0].clientHeight;
+			event_blocks = event_blocks  / total_blocks * document.getElementsByClassName("timeline")[0].clientHeight;
+			bottom_blocks = bottom_blocks / total_blocks * document.getElementsByClassName("timeline")[0].clientHeight;
+
+
+			console.log("=========")
+			let el = document.createElement("div")
+
+			let top_spacer_el = document.createElement("div");
+			top_spacer_el.className = "top-spacer";
+			top_spacer_el.setAttribute("style", "height: " + top_blocks + "px");
+			el.appendChild(top_spacer_el)
+
+			let event_el = document.createElement("div");
+			let title_el = document.createElement("p")
+			title_el.appendChild(
+				document.createTextNode(start_time.split(",")[1] + ": " + schedule[activityIdx].title)
+				)
+			title_el.className = "event-title"
+			event_el.appendChild(title_el);
+			let desc_el = document.createElement("p")
+			desc_el.appendChild(
+				document.createTextNode(schedule[activityIdx].description)
+				)
+			event_el.appendChild(desc_el);
+			event_el.className = "event-spacer";
+			event_el.setAttribute("onclick", "window.open(\"" + schedule[activityIdx].link + "\");");
+			event_el.setAttribute("style", "height: " + event_blocks + "px");
+			el.appendChild(event_el)
+
+			let bottom_spacer_el = document.createElement("div");
+			bottom_spacer_el.className = "bottom-spacer";
+			bottom_spacer_el.setAttribute("style", "height: " + bottom_blocks + "px");
+			el.appendChild(bottom_spacer_el)
+
+			el.className = "event"
+			document.querySelector("#day-" + day + " > .events").appendChild(el);
+		}
+	</script>
+</body>
+</html>
