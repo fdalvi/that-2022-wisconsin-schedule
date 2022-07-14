@@ -26,6 +26,7 @@ def get_activities(schedule_url = 'https://that.us/events/wi/2022/schedule/'):
 def main():
 	parser = ArgumentParser()
 	parser.add_argument("--cache-path", default=".cache", type=Path)
+	parser.add_argument("--output-dir", default="build", type=Path)
 	args = parser.parse_args()
 
 	cache_valid = os.path.exists(args.cache_path / "activity_list.txt")
@@ -127,10 +128,10 @@ def main():
 
 	html_template = html_template.replace("<<<<SCHEDULE>>>>", json.dumps(all_activities))
 	html_template = html_template.replace("<<<<LASTUPDATED>>>>", last_updated)
-	with open("index.html", "w") as fp:
+
+	os.makedirs(args.output_dir, exist_ok=True)
+	with open(args.output_dir / "index.html", "w") as fp:
 		fp.write(html_template)
-
-
 
 
 if __name__ == '__main__':

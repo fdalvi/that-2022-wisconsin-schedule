@@ -291,10 +291,11 @@
 			let event_blocks = timeToBlocks(end_time) - top_blocks;
 			let bottom_blocks = timeToBlocks("7/26/2022, 11:00:00 PM") - timeToBlocks(end_time);
 
-			console.log("asdfadsfasdfas " + timeToBlocks("7/26/2022, 11:00:00 PM"))
-			console.log(top_blocks)
-			console.log(event_blocks)
-			console.log(bottom_blocks)
+			// If event ends the next day
+			if (start_time.split("/")[1] != end_time.split("/")[1]) {
+				event_blocks = timeToBlocks("7/26/2022, 11:00:00 PM") - timeToBlocks(start_time);
+				bottom_blocks = 0;
+			}
 
 			let total_blocks = top_blocks + event_blocks + bottom_blocks;
 
